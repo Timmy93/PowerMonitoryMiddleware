@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Javadoc dani
+ * @author daniele
+ *
+ */
 public class Reader {
 
 	private String secondsOfGeneration;
