@@ -17,6 +17,7 @@ public class Reader {
     
     private BufferedReader brStd;
     private BufferedReader brErr;
+    private InputStreamReader isr;
     
 	public Reader(Integer seconds, String pathToGenerator){
 		this.secondsOfGeneration = seconds.toString();
@@ -32,11 +33,27 @@ public class Reader {
 
 		//Reading the standard output and the standard error
 		this.brStd = new BufferedReader( new InputStreamReader( dataGenerator.getInputStream() ) );
-		this.brErr = new BufferedReader( new InputStreamReader( dataGenerator.getErrorStream() ) );
+		//this.brErr = new BufferedReader( new InputStreamReader( dataGenerator.getErrorStream() ) );
+		this.isr = new InputStreamReader( dataGenerator.getErrorStream() );
 	}
 	
+//	public String readOneLine() throws IOException{
+//		return this.brErr.readLine();
+//	}
+	
+	/**
+	 * Reader without buffered reader - Still has the bug
+	 * @return
+	 * @throws IOException
+	 */
 	public String readOneLine() throws IOException{
-		return this.brErr.readLine();
+		String myString = "";
+		char[] cbuf = {'a'};
+		while(cbuf[0] != '\n'){
+			isr.read(cbuf);
+			myString = myString + cbuf[0];
+		}
+		System.out.println(myString);
+		return myString.trim();
 	}
-	
 }
