@@ -20,4 +20,8 @@ public class Household {
 	protected void addPlug(Integer plug){
 		plugs.add( new Plug(plug) );
 	}
+	
+	public Integer getHouseholdId(){
+		return this.id;
+	}
 }

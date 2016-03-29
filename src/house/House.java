@@ -93,4 +93,8 @@ public class House {
 		String numericalString = cleanString.split(" ")[1];
 		return Integer.parseInt( numericalString );
 	}
+	
+	public Integer getHouseId(){
+		return this.id;
+	}
 }
