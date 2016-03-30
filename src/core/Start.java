@@ -12,7 +12,7 @@ public class Start {
 	 */
 	public static void main(String[] args) {
 		String pathToGenerator = "/home/timmy/Documenti/Progetti_Eclipse/Middleware/OpenMPITest/src/data-generator.jar";
-		Integer secOfCollection = 1500;
+		Integer secOfCollection = 15;
 		long startTime = System.currentTimeMillis();
 		ArrayList<House> myHouses = new ArrayList<House>();
 		
@@ -22,13 +22,17 @@ public class Start {
 		
 		//Generate the world
 		generateWorld(myReader, myHouses);
-		
-		
 		long creatingClassesTime = System.currentTimeMillis();
-		System.out.println("Creation finished");
-		System.out.println("Creation data time: "+ (runningTime-startTime) + " ms.");
+		
+		//Collecting data
+		
+		
+		//Measure time and efficiency
+		long endTime = System.currentTimeMillis();
+		System.out.println("Execution finished");
+		System.out.println("Collecting data time: "+ (runningTime-startTime) + " ms.");
 		System.out.println("Creation world time: "+ (creatingClassesTime-runningTime) + " ms.");
-		System.out.println("Total generation time: "+ (creatingClassesTime-startTime) + " ms.");
+		System.out.println("Total execution time: "+ (endTime-startTime) + " ms.");
 	}
 
 	/**

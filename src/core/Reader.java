@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Javadoc dani
@@ -24,6 +25,14 @@ public class Reader {
     private BufferedReader brErr;
     
 	public Reader(Integer seconds, String pathToGenerator){
+		/*
+		 * Set false to read directly from the output of the the process of data generation.
+		 * Current bug:
+		 * - With the waitFor -> Process never ends.
+		 * - Without waitFor -> We never reach the end of the stream.
+		 */
+		boolean dataOnFile = true;
+		
 		this.secondsOfGeneration = seconds.toString();
 		this.jarName = pathToGenerator;
 		
@@ -39,11 +48,15 @@ public class Reader {
 		
 		//Executing and wait the data generator
 		ProcessBuilder pb = new ProcessBuilder( "java", "-jar", jarName, secondsOfGeneration );
-		pb.redirectOutput( this.outputFile );
-		pb.redirectError( this.errorFile );
+		if( dataOnFile ){
+			pb.redirectOutput( this.outputFile );
+			pb.redirectError( this.errorFile );
+		}
 		try {
 			this.dataGenerator = pb.start();
-			this.dataGenerator.waitFor();
+			if( dataOnFile ){
+				this.dataGenerator.waitFor();
+			}
 		} catch (IOException e) {
 			System.err.println("Cannot execute: " + jarName + "\nTerminate execution" );
 			System.exit(2);
@@ -51,14 +64,20 @@ public class Reader {
 			System.err.println("Cannot wait: " + jarName + "\nTerminate execution" );
 			System.exit(3);
 		}
+		System.out.println("Data creation - Terminated");
 		
 		//Prepare reader for generated output
-		try {
-			this.brStd = new BufferedReader( new FileReader( outputFile ) );
-			this.brErr = new BufferedReader( new FileReader( errorFile ) );
-		} catch (FileNotFoundException e) {
-			System.err.println("Temporary files not found\nTerminate execution" );
-			System.exit(4);
+		if( dataOnFile ){
+			try {
+				this.brStd = new BufferedReader( new FileReader( outputFile ) );
+				this.brErr = new BufferedReader( new FileReader( errorFile ) );
+			} catch (FileNotFoundException e) {
+				System.err.println("Temporary files not found\nTerminate execution" );
+				System.exit(4);
+			}
+		} else {
+			this.brStd = new BufferedReader( new InputStreamReader( dataGenerator.getInputStream() ) );
+			this.brErr = new BufferedReader( new InputStreamReader( dataGenerator.getErrorStream() ) );
 		}
 	}
 	
